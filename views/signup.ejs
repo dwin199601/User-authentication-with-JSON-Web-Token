@@ -1,0 +1,69 @@
+<%- include('partials/header'); -%>
+
+    <form>
+        <h2>Sign Up</h2>
+        <label for="fullName">
+            Full Name
+        </label>
+        <input type="text" name="fullName" required>
+        <div class="fullname_error"></div>
+        <label for="email">
+            Email
+        </label>
+        <input type="email" name="email" required>
+        <div class="email_error"></div>
+        <label for="password">
+            Password
+        </label>
+        <input type="password" name="password" required>
+        <div class="password_error"></div>
+        <button>Sign Up</button>
+    </form>
+
+    <script>
+        const form = document.querySelector('form');
+        const emailError = document.querySelector('.email_error');
+        const passError = document.querySelector('.password_error');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            //reset errors
+            emailError.textContent = "";
+            passError.textContent = "";
+            //get the values
+            const fullName = form.fullName.value;
+            const email = form.email.value;
+            const password = form.password.value;
+
+            //console.log(fullName, email, password);
+            try {
+                const result = await fetch('/signup', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        fullName: fullName,
+                        email: email,
+                        password: password
+                    }),
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                const data = await result.json(); // data represent errors or notification from the authController signup_post function
+                console.log(data);
+                //displaying errors on front-end
+                if (data.err) { // err is object that includes data about error
+                    emailError.textContent = data.err.email;
+                    passError.textContent = data.err.password;
+                }
+                if (data.user) {
+                    alert("User was created!!");
+                    location.assign('/');
+                }
+            }
+            catch (err) {
+                console.log(err);
+            }
+        })
+    </script>
+
+
+
+    <%- include('partials/footer'); -%>

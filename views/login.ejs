@@ -1,0 +1,60 @@
+<%- include('partials/header'); -%>
+
+    <form>
+        <h2>Login</h2>
+        <label for="email"> Email</label>
+        <input type="email" name="email" required>
+        <div class="email_error"></div>
+
+        <label for="password"> Password </label>
+        <input type="password" name="password" required>
+        <div class="password_error"></div>
+        <button>Sign Up</button>
+    </form>
+
+    <script>
+        const emailError = document.querySelector('.email_error');
+        const passError = document.querySelector('.password_error');
+        const form = document.querySelector('form');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            //reset errors
+            emailError.textContent = "";
+            passError.textContent = "";
+
+            //get the values
+            const email = form.email.value;
+            const password = form.password.value;
+
+            //console.log(fullName, email, password);
+            try {
+                const result = await fetch('/login', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        email: email,
+                        password: password
+                    }),
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                const data = await result.json(); // data represent errors or notification from the authController signup_post function
+                console.log(data);
+                //displaying errors on front-end
+                if (data.errors) { // err is object that includes data about error
+                    emailError.textContent = data.errors.email;
+                    passError.textContent = data.errors.password;
+                }
+                if (data.user) {
+                    alert("Welcome back!!");
+                    location.assign('/');
+                }
+            }
+            catch (err) {
+                console.log(err);
+            }
+        })
+    </script>
+
+
+
+    <%- include('partials/footer'); -%>
