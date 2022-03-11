@@ -16,7 +16,7 @@ app.set('view engine', 'ejs');
 // database connection
 const PORT = process.env.PORT || 3000;
 const dbURI =
- 'mongodb+srv://Alex:Alex@cluster0.gbjfl.mongodb.net/users?retryWrites=true&w=majority';
+ 'YOUR MONGODB URL';
 mongoose.connect(dbURI, 
 { 
   useNewUrlParser: true, 
